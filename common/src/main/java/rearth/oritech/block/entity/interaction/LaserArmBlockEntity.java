@@ -67,29 +67,29 @@ import java.util.stream.Collectors;
 import static rearth.oritech.block.base.block.MultiblockMachine.ASSEMBLED;
 
 public class LaserArmBlockEntity extends BlockEntity implements GeoBlockEntity, BlockEntityTicker<LaserArmBlockEntity>, EnergyApi.BlockProvider, ScreenProvider, ExtendedScreenHandlerFactory, MultiblockMachineController, MachineAddonController, InventoryProvider, RedstoneAddonBlockEntity.RedstoneControllable {
-    
+
     public static final String LASER_PLAYER_NAME = "oritech_laser";
     private static final int BLOCK_BREAK_ENERGY = Oritech.CONFIG.laserArmConfig.blockBreakEnergyBase();
-    
+
     // storage
     protected final DynamicEnergyStorage energyStorage = new DynamicEnergyStorage(getDefaultCapacity(), getDefaultInsertRate(), 0, this::markDirty);
-    
+
     public final SimpleInventory inventory = new SimpleInventory(3) {
         @Override
         public void markDirty() {
             LaserArmBlockEntity.this.markDirty();
         }
     };
-    
+
     protected final InventoryStorage inventoryStorage = InventoryStorage.of(inventory, null);
-    
+
     // animation
     protected final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
     private final AnimationController<LaserArmBlockEntity> animationController = getAnimationController();
-    
+
     // multiblock
     private final ArrayList<BlockPos> coreBlocksConnected = new ArrayList<>();
-    
+
     // addons
     private final List<BlockPos> connectedAddons = new ArrayList<>();
     private final List<BlockPos> openSlots = new ArrayList<>();
@@ -99,12 +99,12 @@ public class LaserArmBlockEntity extends BlockEntity implements GeoBlockEntity, 
     public int yieldAddons = 0;
     public int hunterAddons = 0;
     public boolean hasCropFilterAddon = false;
-    
+
     // config
     private final int range = Oritech.CONFIG.laserArmConfig.range();
 
     private Vec3d laserHead;
-    
+
     // working data
     private BlockPos targetDirection;
     private BlockPos currentTarget;
@@ -117,21 +117,21 @@ public class LaserArmBlockEntity extends BlockEntity implements GeoBlockEntity, 
     private boolean redstonePowered;
     private ArrayDeque<BlockPos> pendingArea;
     private final ArrayDeque<LivingEntity> pendingLivingTargets = new ArrayDeque<>();
-    
+
     // needed only on client
     public Vec3d lastRenderPosition;
     private PlayerEntity laserPlayerEntity = null;
-    
+
     public LaserArmBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntitiesContent.LASER_ARM_ENTITY, pos, state);
         laserHead = Vec3d.of(pos.up()).add(0.5, 0.55, 0.5);
     }
-    
+
     @Override
     public void tick(World world, BlockPos pos, BlockState state, LaserArmBlockEntity blockEntity) {
         if (world.isClient() || !isActive(state))
             return;
-        
+
         if (!redstonePowered && energyStorage.getAmount() >= energyRequiredToFire()) {
             if (hunterAddons > 0) {
                 fireAtLivingEntities(world, pos, state, blockEntity);
@@ -143,7 +143,7 @@ public class LaserArmBlockEntity extends BlockEntity implements GeoBlockEntity, 
                 findNextBlockBreakTarget();
             }
         }
-    
+
         if (networkDirty)
             updateNetwork();
     }
@@ -186,7 +186,7 @@ public class LaserArmBlockEntity extends BlockEntity implements GeoBlockEntity, 
         }
 
     }
-    
+
     public void setRedstonePowered(boolean redstonePowered) {
         this.redstonePowered = redstonePowered;
     }
@@ -202,29 +202,32 @@ public class LaserArmBlockEntity extends BlockEntity implements GeoBlockEntity, 
     public int getTargetBlockEnergyNeeded() {
         return targetBlockEnergyNeeded;
     }
-    
+
     public void finishBlockBreaking(BlockPos targetPos, BlockState targetBlockState) {
         progress -= targetBlockEnergyNeeded;
-        
+
         var targetEntity = world.getBlockEntity(targetPos);
         List<ItemStack> dropped;
+        // added getLaserPlayerEntity() to make ae2 certus quartz drop from certus
+        // quartz clusters because it's expecting an entity in
+        // LootContextParameters.THIS_ENTITY
         if (yieldAddons > 0) {
-            dropped = DestroyerBlockEntity.getLootDrops(targetBlockState, (ServerWorld) world, targetPos, targetEntity, yieldAddons);
+            dropped = DestroyerBlockEntity.getLootDrops(targetBlockState, (ServerWorld) world, targetPos, targetEntity, yieldAddons, getLaserPlayerEntity());
         } else {
-            dropped = net.minecraft.block.Block.getDroppedStacks(targetBlockState, (ServerWorld) world, targetPos, targetEntity);
+            dropped = net.minecraft.block.Block.getDroppedStacks(targetBlockState, (ServerWorld) world, targetPos, targetEntity, getLaserPlayerEntity(), ItemStack.EMPTY);
         }
-        
+
         if (targetBlockState.getBlock().equals(Blocks.AMETHYST_CLUSTER)) {
             var farmedCount = 1 + yieldAddons;
             dropped = List.of(new ItemStack(ItemContent.FLUXITE, farmedCount));
             ParticleContent.CHARGING.spawn(world, Vec3d.of(targetPos), 1);
         }
-        
+
         // yes, this will discard items that wont fit anymore
         for (var stack : dropped) {
             this.inventory.addStack(stack);
         }
-        
+
         try {
             targetBlockState.getBlock().onBreak(world, targetPos, targetBlockState, getLaserPlayerEntity());
         } catch (Exception exception) {
@@ -233,10 +236,10 @@ public class LaserArmBlockEntity extends BlockEntity implements GeoBlockEntity, 
         world.addBlockBreakParticles(targetPos, world.getBlockState(targetPos));
         world.playSound(null, targetPos, targetBlockState.getSoundGroup().getBreakSound(), SoundCategory.BLOCKS, 1f, 1f);
         world.breakBlock(targetPos, false);
-        
+
         findNextBlockBreakTarget();
     }
-    
+
     public PlayerEntity getLaserPlayerEntity() {
         if (laserPlayerEntity == null) {
             laserPlayerEntity = new PlayerEntity(world, pos, 0, new GameProfile(UUID.randomUUID(), LASER_PLAYER_NAME)) {

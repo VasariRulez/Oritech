@@ -212,19 +212,27 @@ public class DestroyerBlockEntity extends MultiblockFrameInteractionEntity {
             super.finishBlockWork(processed);
         }
     }
-    
+
     public static List<ItemStack> getLootDrops(BlockState state, ServerWorld world, BlockPos pos, @Nullable BlockEntity blockEntity, int yieldAddons) {
-        
+        return getLootDrops(state, world, pos, blockEntity, yieldAddons, null);
+    }
+
+    public static List<ItemStack> getLootDrops(BlockState state, ServerWorld world, BlockPos pos, @Nullable BlockEntity blockEntity, int yieldAddons, @Nullable PlayerEntity entity) {
+
         var sampleTool = new ItemStack(Items.NETHERITE_PICKAXE);
         sampleTool.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false));
         var fortuneEntry = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.FORTUNE).get();
         sampleTool.addEnchantment(fortuneEntry, Math.min(yieldAddons, 3));
-        
-        var builder = new LootContextParameterSet.Builder(world).add(LootContextParameters.ORIGIN, Vec3d.ofCenter(pos)).add(LootContextParameters.TOOL, sampleTool).addOptional(LootContextParameters.BLOCK_ENTITY, blockEntity);
+
+        var builder = new LootContextParameterSet.Builder(world).add(LootContextParameters.ORIGIN, Vec3d.ofCenter(pos))
+                .add(LootContextParameters.TOOL, sampleTool)
+                .addOptional(LootContextParameters.BLOCK_ENTITY, blockEntity);
+        if (entity != null)
+            builder.addOptional(LootContextParameters.THIS_ENTITY, entity);
         return state.getDroppedStacks(builder);
     }
-    
-    @Override
+
+        @Override
     protected void doProgress(boolean moving) {
         super.doProgress(moving);
         
