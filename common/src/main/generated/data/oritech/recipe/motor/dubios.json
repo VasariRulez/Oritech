@@ -6,7 +6,7 @@
       "item": "oritech:adamant_ingot"
     },
     "s": {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     "w": {
       "item": "oritech:enderic_compound"

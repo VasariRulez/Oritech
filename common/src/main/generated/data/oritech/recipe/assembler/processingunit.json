@@ -6,7 +6,7 @@
   "fluidOutputVariant": "minecraft:empty",
   "ingredients": [
     {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     {
       "tag": "c:carbon_fibre"
@@ -24,5 +24,5 @@
       "id": "oritech:processing_unit"
     }
   ],
-  "time": 200
+  "time": 160
 }

@@ -65,6 +65,17 @@ public class Config {
     public boolean generateOres = true;
     public boolean easyFindFeatures = true;
     
+    @SectionHeader("reactor")
+    public boolean safeMode = false;
+    public int safeModeCooldown = 2400;
+    public int maxSize = 64;
+    public int rfPerPulse = 64;
+    public int absorberRate = 16;
+    public int ventBaseRate = 4;
+    public int ventRelativeRate = 100;
+    public int maxHeat = 2000;
+    public int maxUnstableTicks = 400;
+    
     @SectionHeader("arcane")
     public int enchanterCostMultiplier = 5;
     public int catalystBaseSouls = 50;

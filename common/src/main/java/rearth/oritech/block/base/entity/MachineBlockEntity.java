@@ -121,7 +121,15 @@ public abstract class MachineBlockEntity extends BlockEntity
         }
     }
     
+    // returns true if input items match
     protected boolean canProceed(OritechRecipe value) {
+        
+        var inputInv = getInputInventory();
+        for (int i = 0; i < value.getInputs().size(); i++) {
+            var input = value.getInputs().get(i);
+            if (!input.test(inputInv.getStackInSlot(i))) return false;
+        }
+        
         return true;
     }
     
@@ -222,7 +230,7 @@ public abstract class MachineBlockEntity extends BlockEntity
     }
     
     // check if output slots are valid, meaning: each slot is either empty, or of the same type and can add the target amount without overfilling
-    private boolean canOutputRecipe(OritechRecipe recipe) {
+    public boolean canOutputRecipe(OritechRecipe recipe) {
         
         var outInv = getOutputInventory();
         

@@ -43,7 +43,7 @@ public class ReactorRedstonePortBlock extends BaseReactorBlock {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         
-        if (world.isClient) return super.onUse(state, world, pos, player, hit);
+        if (world.isClient) return ActionResult.SUCCESS;
         
         var lastMode = state.get(PORT_MODE);
         var cycledMode = (lastMode + 1) % 3;

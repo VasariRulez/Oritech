@@ -30,7 +30,6 @@ public class EnergizedPowerRecipeGenerator {
         addOritechAssemblerRecipes(exporter);
         // not adding EP assembling recipes to Oritech because EP uses multiple ingredients from each slot and Oritech only supports single ingredients
         addOritechOreFiltrationRecipes(exporter);
-        // possible future TODO: add nickel plate/wire items and recipes (machine and hand tools) if Energized Power mod is loaded
     }
 
     public static void addOritechAlloys(RecipeExporter exporter) {

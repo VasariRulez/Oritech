@@ -435,7 +435,7 @@ public class NetworkContent {
                 machine.yieldAddons = message.yieldAddons;
                 
                 var oldData = machine.getBaseAddonData();
-                var newData = new MachineAddonController.BaseAddonData(message.operationSpeed, oldData.efficiency(), oldData.energyBonusCapacity(), oldData.energyBonusTransfer());
+                var newData = new MachineAddonController.BaseAddonData(message.operationSpeed, oldData.efficiency(), oldData.energyBonusCapacity(), oldData.energyBonusTransfer(), oldData.extraChambers());
                 machine.setBaseAddonData(newData);
             }
             
@@ -456,7 +456,7 @@ public class NetworkContent {
             if (entity instanceof SteamEngineEntity machine) {
                 
                 var oldData = machine.getBaseAddonData();
-                var newData = new MachineAddonController.BaseAddonData(message.speed, message.efficiency, oldData.energyBonusCapacity(), oldData.energyBonusTransfer());
+                var newData = new MachineAddonController.BaseAddonData(message.speed, message.efficiency, oldData.energyBonusCapacity(), oldData.energyBonusTransfer(), oldData.extraChambers());
                 machine.setBaseAddonData(newData);
                 machine.waterStorage.amount = message.waterStored;
                 machine.energyProducedTick = message.energyProducedTick;

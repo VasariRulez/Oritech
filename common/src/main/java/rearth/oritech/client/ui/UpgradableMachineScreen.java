@@ -44,6 +44,7 @@ public class UpgradableMachineScreen<S extends UpgradableMachineScreenHandler> e
         
         var speed = 1 / handler.addonUiData.speed() * 100;
         var efficiency = 1 / handler.addonUiData.efficiency() * 100;
+        var extraChambers = handler.addonUiData.extraChambers();
         
         speedLabel = Components.label(Text.translatable("title.oritech.machine_speed", (int) speed));
         efficiencyLabel = Components.label(Text.translatable("title.oritech.machine_efficiency", (int) efficiency));
@@ -51,6 +52,10 @@ public class UpgradableMachineScreen<S extends UpgradableMachineScreenHandler> e
         container.child(Components.box(Sizing.fixed(73), Sizing.fixed(1)).color(new Color(0.8f, 0.8f, 0.8f)));
         container.child(speedLabel.tooltip(Text.translatable("tooltip.oritech.machine_speed")).margins(Insets.of(3)));
         container.child(efficiencyLabel.tooltip(Text.translatable("tooltip.oritech.machine_efficiency")).margins(Insets.of(3)));
+        
+        if (extraChambers > 0) {
+            container.child(Components.label(Text.translatable("title.oritech.chambers", extraChambers)).tooltip(Text.translatable("tooltip.oritech.chambers")).margins(Insets.of(3)));
+        }
         
         if (steamProductionLabel != null)
             container.child(steamProductionLabel.margins(Insets.of(3)));

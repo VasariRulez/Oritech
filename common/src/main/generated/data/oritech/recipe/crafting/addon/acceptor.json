@@ -9,7 +9,7 @@
       "item": "oritech:energite_ingot"
     },
     "f": {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     "s": {
       "tag": "c:ingots/electrum"

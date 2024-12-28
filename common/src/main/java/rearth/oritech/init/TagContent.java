@@ -19,8 +19,12 @@ public class TagContent {
     public static final TagKey<Item> GOLD_DUSTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "dusts/gold"));
     public static final TagKey<Item> QUARTZ_DUSTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "dusts/quartz"));
     public static final TagKey<Item> COAL_DUSTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "dusts/coal"));
+    public static final TagKey<Item> URANIUM_DUSTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "dusts/uranium"));
+    public static final TagKey<Item> PLUTONIUM_DUSTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "dusts/plutonium"));
+    public static final TagKey<Item> ELECTRUM_DUSTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "dusts/electrum"));
     
     public static final TagKey<Item> STEEL_INGOTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "ingots/steel"));
+    public static final TagKey<Item> ELECTRUM_INGOTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "ingots/electrum"));
     
     // custom ores
     public static final TagKey<Item> NICKEL_RAW_ORES = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "raw_ores/nickel"));
@@ -35,8 +39,10 @@ public class TagContent {
     public static final TagKey<Item> PLATINUM_INGOTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "ingots/platinum"));
     public static final TagKey<Item> PLATINUM_ORES = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "ores/platinum"));
     
-    public static final TagKey<Item> ELECTRUM_INGOTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "ingots/electrum"));
-    public static final TagKey<Item> ELECTRUM_DUSTS = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "dusts/electrum"));
+    public static final TagKey<Item> URANIUM_RAW_ORES = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "raw_ores/uranium"));
+    
+    // plastic
+    public static final TagKey<Item> PLASTIC_PLATES = TagKey.of(RegistryKeys.ITEM, Identifier.of("c", "plates/plastic"));
     
     // biomass
     public static final TagKey<Item> BIOMASS = TagKey.of(RegistryKeys.ITEM, Oritech.id("biomass"));

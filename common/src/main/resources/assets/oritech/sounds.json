@@ -92,6 +92,26 @@
       "oritech:wrench_turn"
     ]
   },
+  "reactor": {
+    "sounds": [
+      "oritech:reactor"
+    ]
+  },
+  "reactor_loading": {
+    "sounds": [
+      "oritech:reactor_loading"
+    ]
+  },
+  "reactor_warning": {
+    "sounds": [
+      "oritech:reactor_warning"
+    ]
+  },
+  "nuke_explosion": {
+    "sounds": [
+      "oritech:nuke_explosion"
+    ]
+  },
   "particle_moving": {
     "sounds": [
       {

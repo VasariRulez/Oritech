@@ -28,6 +28,10 @@ public class SoundContent implements ArchitecturyRegistryContainer<SoundEvent> {
     public static final SoundEvent PARTICLE_MOVING = SoundEvent.of(Oritech.id("particle_moving"));
     public static final SoundEvent SHORT_SERVO = SoundEvent.of(Oritech.id("short_servo"));
     public static final SoundEvent WRENCH_TURN = SoundEvent.of(Oritech.id("wrench_turn"));
+    public static final SoundEvent REACTOR = SoundEvent.of(Oritech.id("reactor"));
+    public static final SoundEvent REACTOR_LOADING = SoundEvent.of(Oritech.id("reactor_loading"));
+    public static final SoundEvent REACTOR_WARNING = SoundEvent.of(Oritech.id("reactor_warning"));
+    public static final SoundEvent NUKE_EXPLOSION = SoundEvent.of(Oritech.id("nuke_explosion"));
     
     @Override
     public Class<SoundEvent> getTargetFieldType() {

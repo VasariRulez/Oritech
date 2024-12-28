@@ -5,6 +5,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenHandler;
@@ -15,6 +16,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import rearth.oritech.client.init.ModScreens;
 import rearth.oritech.client.ui.UpgradableMachineScreenHandler;
+import rearth.oritech.init.recipes.OritechRecipe;
 import rearth.oritech.util.MachineAddonController;
 import rearth.oritech.util.ScreenProvider;
 import rearth.oritech.util.energy.containers.DynamicEnergyStorage;
@@ -30,6 +32,27 @@ public abstract class UpgradableMachineBlockEntity extends MachineBlockEntity im
     
     public UpgradableMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, int energyPerTick) {
         super(type, pos, state, energyPerTick);
+    }
+    
+    @Override
+    protected void craftItem(OritechRecipe activeRecipe, List<ItemStack> outputInventory, List<ItemStack> inputInventory) {
+        super.craftItem(activeRecipe, outputInventory, inputInventory);
+        
+        if (supportExtraChambersAuto()) {
+            var chamberCount = addonData.extraChambers();
+            
+            // craft N extra items if we have extra chambers
+            for (int i = 0; i < chamberCount; i++) {
+                if (!canOutputRecipe(activeRecipe) || !canProceed(activeRecipe)) break;
+                super.craftItem(activeRecipe, outputInventory, inputInventory);
+            }
+        }
+        
+    }
+    
+    // this should return false if the default craftItem implementation should not handle extra chambers
+    public boolean supportExtraChambersAuto() {
+        return true;
     }
     
     @Override

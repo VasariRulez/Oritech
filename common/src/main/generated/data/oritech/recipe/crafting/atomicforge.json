@@ -12,7 +12,7 @@
       "item": "oritech:flux_gate"
     },
     "m": {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     "s": {
       "item": "oritech:duratium_ingot"

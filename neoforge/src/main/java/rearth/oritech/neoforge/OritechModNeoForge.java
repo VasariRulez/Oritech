@@ -32,8 +32,6 @@ public final class OritechModNeoForge {
         EnergyApi.BLOCK = energyApiInstance;
         EnergyApi.ITEM = energyApiInstance;
         
-        // TODO call register event somehow
-        
         Oritech.initialize();
         
     }

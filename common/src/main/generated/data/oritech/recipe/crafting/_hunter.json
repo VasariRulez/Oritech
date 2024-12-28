@@ -9,7 +9,7 @@
       "item": "minecraft:iron_sword"
     },
     "f": {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     "s": {
       "item": "oritech:motor"

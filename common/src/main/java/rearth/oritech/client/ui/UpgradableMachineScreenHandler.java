@@ -21,7 +21,7 @@ public class UpgradableMachineScreenHandler extends BasicMachineScreenHandler {
         
         // sync speed and efficiency to client entity, so the getProgress method works correctly
         if (playerInventory.player.getWorld().isClient() && blockEntity instanceof MachineAddonController upgradableEntity) {
-            var baseData = new MachineAddonController.BaseAddonData(addonUiData.speed(), addonUiData.efficiency(), 100, 100);
+            var baseData = new MachineAddonController.BaseAddonData(addonUiData.speed(), addonUiData.efficiency(), 100, 100, addonUiData.extraChambers());
             upgradableEntity.setBaseAddonData(baseData);
         }
         

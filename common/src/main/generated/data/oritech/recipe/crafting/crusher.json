@@ -9,7 +9,7 @@
       "item": "oritech:flux_gate"
     },
     "f": {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     "s": {
       "item": "oritech:motor"

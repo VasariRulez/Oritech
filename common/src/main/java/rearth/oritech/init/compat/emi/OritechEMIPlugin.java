@@ -20,6 +20,10 @@ import rearth.oritech.client.init.ModScreens;
 import rearth.oritech.init.BlockContent;
 import rearth.oritech.init.recipes.OritechRecipeType;
 import rearth.oritech.init.recipes.RecipeContent;
+import rearth.oritech.util.InventorySlotAssignment;
+import rearth.oritech.util.ScreenProvider;
+
+import java.util.List;
 
 @EmiEntrypoint
 public class OritechEMIPlugin implements EmiPlugin {
@@ -43,8 +47,12 @@ public class OritechEMIPlugin implements EmiPlugin {
         registerOritechCategory(registry, manager, RecipeContent.LAVA_GENERATOR, BlockContent.LAVA_GENERATOR_BLOCK, LavaGeneratorEntity.class);
         registerOritechCategory(registry, manager, RecipeContent.STEAM_ENGINE, BlockContent.STEAM_ENGINE_BLOCK, SteamEngineEntity.class);
         
+        // reactor
+        registerCustom(registry, manager, RecipeContent.REACTOR, BlockContent.REACTOR_CONTROLLER, List.of(new ScreenProvider.GuiSlot(0, 55, 35)), new InventorySlotAssignment(0, 1, 1, 0));
+        
         // others
         registerParticleAccelerator(registry, manager, RecipeContent.PARTICLE_COLLISION);
+        registerLaser(registry, manager, RecipeContent.LASER);
         
         registry.addWorkstation(VanillaEmiRecipeCategories.SMELTING, EmiStack.of(BlockContent.POWERED_FURNACE_BLOCK));
         
@@ -73,6 +81,21 @@ public class OritechEMIPlugin implements EmiPlugin {
         
     }
     
+    private void registerCustom(EmiRegistry registry, RecipeManager manager, OritechRecipeType recipeType, ItemConvertible machine, List<ScreenProvider.GuiSlot> slots, InventorySlotAssignment assignments) {
+        
+        var icon = EmiStack.of(machine);
+        var category = new EmiRecipeCategory(recipeType.getIdentifier(), icon);
+        
+        registry.addCategory(category);
+        registry.addWorkstation(category, icon);
+        
+        manager.listAllOfType(recipeType)
+          .stream()
+          .map(entry -> new OritechEMIRecipe(entry, category, true, slots, assignments))
+          .forEach(registry::addRecipe);
+        
+    }
+    
     private void registerParticleAccelerator(EmiRegistry registry, RecipeManager manager, OritechRecipeType recipeType) {
         
         var machine = BlockContent.ACCELERATOR_CONTROLLER;
@@ -86,6 +109,23 @@ public class OritechEMIPlugin implements EmiPlugin {
         manager.listAllOfType(recipeType)
           .stream()
           .map(entry -> new OritechEMIParticleCollisionRecipe(entry, category))
+          .forEach(registry::addRecipe);
+        
+    }
+    
+    private void registerLaser(EmiRegistry registry, RecipeManager manager, OritechRecipeType recipeType) {
+        
+        var machine = BlockContent.LASER_ARM_BLOCK;
+        
+        var icon = EmiStack.of(machine);
+        var category = new EmiRecipeCategory(recipeType.getIdentifier(), icon);
+        
+        registry.addCategory(category);
+        registry.addWorkstation(category, icon);
+        
+        manager.listAllOfType(recipeType)
+          .stream()
+          .map(entry -> new OritechEmiLaserRecipe(entry, category))
           .forEach(registry::addRecipe);
         
     }

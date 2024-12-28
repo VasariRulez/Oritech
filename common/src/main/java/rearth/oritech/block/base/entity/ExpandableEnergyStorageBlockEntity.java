@@ -244,8 +244,7 @@ public abstract class ExpandableEnergyStorageBlockEntity extends BlockEntity imp
     
     @Override
     public void markDirty() {
-        if (world != null)
-            world.markDirty(pos);
+        super.markDirty();
         networkDirty = true;
     }
     

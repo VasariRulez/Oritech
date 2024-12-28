@@ -154,7 +154,9 @@ public class BlockEntitiesContent implements ArchitecturyRegistryContainer<Block
     public static final BlockEntityType<SpawnerControllerBlockEntity> SPAWNER_CONTROLLER_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(SpawnerControllerBlockEntity::new, BlockContent.SPAWNER_CONTROLLER_BLOCK).build();
     
     public static final BlockEntityType<ReactorControllerBlockEntity> REACTOR_CONTROLLER_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(ReactorControllerBlockEntity::new, BlockContent.REACTOR_CONTROLLER).build();
+    @AssignSidedInventory
     public static final BlockEntityType<ReactorFuelPortEntity> REACTOR_FUEL_PORT_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(ReactorFuelPortEntity::new, BlockContent.REACTOR_FUEL_PORT).build();
+    @AssignSidedInventory
     public static final BlockEntityType<ReactorAbsorberPortEntity> REACTOR_ABSORBER_PORT_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(ReactorAbsorberPortEntity::new, BlockContent.REACTOR_ABSORBER_PORT).build();
     @AssignSidedEnergy
     public static final BlockEntityType<ReactorEnergyPortEntity> REACTOR_ENERGY_PORT_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(ReactorEnergyPortEntity::new, BlockContent.REACTOR_ENERGY_PORT).build();
@@ -200,6 +202,7 @@ public class BlockEntitiesContent implements ArchitecturyRegistryContainer<Block
     
     public static final BlockEntityType<AddonBlockEntity> ADDON_ENTITY = FabricBlockEntityTypeBuilder.create(AddonBlockEntity::new,
       BlockContent.MACHINE_SPEED_ADDON,
+      BlockContent.MACHINE_PROCESSING_ADDON,
       BlockContent.MACHINE_EFFICIENCY_ADDON,
       BlockContent.MACHINE_FLUID_ADDON,
       BlockContent.MACHINE_HUNTER_ADDON,

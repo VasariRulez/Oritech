@@ -38,7 +38,8 @@ public class Wrench extends Item {
 				BlockContent.ENERGY_PIPE_CONNECTION,
 				BlockContent.SUPERCONDUCTOR_CONNECTION,
 				BlockContent.FLUID_PIPE_CONNECTION,
-				BlockContent.ITEM_PIPE_CONNECTION
+				BlockContent.ITEM_PIPE_CONNECTION,
+				BlockContent.MACHINE_FRAME_BLOCK
 		), 25f)), 1.f, 1);
 	}
 

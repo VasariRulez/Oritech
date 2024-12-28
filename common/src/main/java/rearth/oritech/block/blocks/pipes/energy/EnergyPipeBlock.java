@@ -32,7 +32,7 @@ public class EnergyPipeBlock extends GenericPipeBlock {
     
     @Override
     public TriFunction<World, BlockPos, Direction, Boolean> apiValidationFunction() {
-        return ((world, pos, direction) -> EnergyApi.BLOCK.find(world, pos, direction) != null);   // TODO check if this loads null values
+        return ((world, pos, direction) -> EnergyApi.BLOCK.find(world, pos, direction) != null);
     }
     
     @Override

@@ -6,7 +6,7 @@
   "fluidOutputVariant": "minecraft:empty",
   "ingredients": [
     {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     {
       "tag": "c:ingots/electrum"
@@ -24,5 +24,5 @@
       "id": "oritech:basic_battery"
     }
   ],
-  "time": 100
+  "time": 80
 }

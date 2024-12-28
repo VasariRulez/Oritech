@@ -31,6 +31,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import rearth.oritech.Oritech;
+import rearth.oritech.block.base.entity.FluidMultiblockGeneratorBlockEntity;
 import rearth.oritech.block.base.entity.MachineBlockEntity;
 import rearth.oritech.block.base.entity.MultiblockMachineEntity;
 import rearth.oritech.client.init.ModScreens;
@@ -97,6 +98,8 @@ public class CentrifugeBlockEntity extends MultiblockMachineEntity implements Fl
             processBucket(bucketIn, bucketOut, inputStorage, outputStorage);
         }
         
+        FluidMultiblockGeneratorBlockEntity.resetEmptyFluidTank(inputStorage);
+        
         super.tick(world, pos, state, blockEntity);
     }
     
@@ -155,6 +158,9 @@ public class CentrifugeBlockEntity extends MultiblockMachineEntity implements Fl
         
         if (!hasFluidAddon) return super.canProceed(recipe);
         
+        var itemsMatch = super.canProceed(recipe);
+        if (!itemsMatch) return false;
+        
         // check if input is available
         var input = recipe.getFluidInput();
         if (input != null && input.getAmount() > 0) {   // only verify fluid input match if fluid input exists
@@ -185,7 +191,7 @@ public class CentrifugeBlockEntity extends MultiblockMachineEntity implements Fl
         
         if (!hasFluidAddon)
             return super.getRecipe();
-
+        
         // get recipes matching input items
         var candidates = Objects.requireNonNull(world).getRecipeManager().getAllMatches(getOwnRecipeType(), getInputInventory(), world);
         // filter out recipes based on input tank
@@ -217,10 +223,22 @@ public class CentrifugeBlockEntity extends MultiblockMachineEntity implements Fl
     
     @Override
     protected void craftItem(OritechRecipe activeRecipe, List<ItemStack> outputInventory, List<ItemStack> inputInventory) {
-        super.craftItem(activeRecipe, outputInventory, inputInventory);
         
-        if (hasFluidAddon)
-            craftFluids(activeRecipe);
+        var chamberCount = getBaseAddonData().extraChambers() + 1;
+        
+        for (int i = 0; i < chamberCount; i++) {
+            if (!canOutputRecipe(activeRecipe) || !canProceed(activeRecipe)) break;
+            super.craftItem(activeRecipe, outputInventory, inputInventory);
+            
+            if (hasFluidAddon) {
+                craftFluids(activeRecipe);
+            }
+        }
+    }
+    
+    @Override
+    public boolean supportExtraChambersAuto() {
+        return false;
     }
     
     private void craftFluids(OritechRecipe activeRecipe) {

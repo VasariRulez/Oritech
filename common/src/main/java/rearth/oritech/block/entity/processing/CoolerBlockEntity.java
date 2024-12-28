@@ -85,7 +85,7 @@ public class CoolerBlockEntity extends MultiblockMachineEntity implements FluidP
         var base = super.getUiData();
         if (!inColdArea) return base;
         
-        return new AddonUiData(base.positions(), base.openSlots(), base.efficiency() * 0.5f, base.speed() * 0.5f, base.ownPosition());
+        return new AddonUiData(base.positions(), base.openSlots(), base.efficiency() * 0.5f, base.speed() * 0.5f, base.ownPosition(), base.extraChambers());
     }
     
     @Override

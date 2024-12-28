@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -65,6 +66,11 @@ public class ReactorControllerBlock extends BaseReactorBlock implements BlockEnt
         
         if (!world.isClient && world.getBlockEntity(pos) instanceof ReactorControllerBlockEntity reactorController) {
             reactorController.init(player);
+            
+            if (world.getTime() < reactorController.disabledUntil) {
+                player.sendMessage(Text.translatable("text.oritech.reactor.cooldown"));
+                return ActionResult.SUCCESS;
+            }
             
             if (reactorController.active) {
                 var handler = (ExtendedScreenHandlerFactory) world.getBlockEntity(pos);

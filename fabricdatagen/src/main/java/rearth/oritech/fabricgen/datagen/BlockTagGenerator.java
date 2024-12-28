@@ -36,6 +36,8 @@ public class BlockTagGenerator extends FabricTagProvider.BlockTagProvider {
           .add(BlockContent.NICKEL_ORE)
           .add(BlockContent.DEEPSLATE_NICKEL_ORE)
           .add(BlockContent.DEEPSLATE_PLATINUM_ORE)
+          .add(BlockContent.DEEPSLATE_URANIUM_ORE)
+          .add(BlockContent.URANIUM_CRYSTAL)
           .add(BlockContent.ENDSTONE_PLATINUM_ORE);
         
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
@@ -46,6 +48,7 @@ public class BlockTagGenerator extends FabricTagProvider.BlockTagProvider {
           .add(BlockContent.NICKEL_ORE)
           .add(BlockContent.DEEPSLATE_NICKEL_ORE)
           .add(BlockContent.DEEPSLATE_PLATINUM_ORE)
+          .add(BlockContent.DEEPSLATE_URANIUM_ORE)
           .add(BlockContent.ENDSTONE_PLATINUM_ORE);
         
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
@@ -54,6 +57,7 @@ public class BlockTagGenerator extends FabricTagProvider.BlockTagProvider {
         
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
           .add(BlockContent.DEEPSLATE_PLATINUM_ORE)
+          .add(BlockContent.DEEPSLATE_URANIUM_ORE)
           .add(BlockContent.ENDSTONE_PLATINUM_ORE);
         
         getOrCreateTagBuilder(TagContent.DRILL_MINEABLE)
@@ -70,6 +74,7 @@ public class BlockTagGenerator extends FabricTagProvider.BlockTagProvider {
           .add(BlockContent.RESOURCE_NODE_EMERALD)
           .add(BlockContent.RESOURCE_NODE_DIAMOND)
           .add(BlockContent.RESOURCE_NODE_COAL)
+          .add(BlockContent.RESOURCE_NODE_URANIUM)
           .add(BlockContent.RESOURCE_NODE_PLATINUM);
         
         getOrCreateTagBuilder(TagContent.LASER_PASSTHROUGH)

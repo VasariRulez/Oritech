@@ -27,6 +27,7 @@ import rearth.oritech.block.base.entity.MachineBlockEntity;
 import rearth.oritech.block.base.entity.UpgradableGeneratorBlockEntity;
 import rearth.oritech.init.compat.rei.OritechDisplay;
 import rearth.oritech.init.recipes.OritechRecipeType;
+import rearth.oritech.util.InventorySlotAssignment;
 import rearth.oritech.util.ScreenProvider;
 
 import java.lang.reflect.InvocationTargetException;
@@ -37,7 +38,9 @@ import static rearth.oritech.client.ui.BasicMachineScreen.GUI_COMPONENTS;
 public class OritechReiDisplay implements DisplayCategory<Display> {
     
     protected final OritechRecipeType recipeType;
-    protected final MachineBlockEntity screenProvider;
+    private final Boolean isGenerator;
+    private final List<ScreenProvider.GuiSlot> slots;
+    private final InventorySlotAssignment slotOffsets;
     protected final ItemConvertible icon;
     
     public OritechReiDisplay(OritechRecipeType recipeType, Class<? extends MachineBlockEntity> screenProviderSource, ItemConvertible icon) {
@@ -49,12 +52,24 @@ public class OritechReiDisplay implements DisplayCategory<Display> {
         
         this.recipeType = recipeType;
         try {
-            this.screenProvider = screenProviderSource.getDeclaredConstructor(BlockPos.class, BlockState.class).newInstance(new BlockPos(0, 0, 0), finalBlockState);
+            var screenProvider = screenProviderSource.getDeclaredConstructor(BlockPos.class, BlockState.class).newInstance(new BlockPos(0, 0, 0), finalBlockState);
+            this.isGenerator = screenProvider instanceof UpgradableGeneratorBlockEntity;
+            this.slots = screenProvider.getGuiSlots();
+            this.slotOffsets = screenProvider.getSlots();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
         this.icon = icon;
+    }
+    
+    public OritechReiDisplay(OritechRecipeType recipeType, ItemConvertible icon, boolean isGenerator, List<ScreenProvider.GuiSlot> slots, InventorySlotAssignment assignments) {
+        
+        this.recipeType = recipeType;
+        this.icon = icon;
+        this.isGenerator = isGenerator;
+        this.slots = slots;
+        this.slotOffsets = assignments;
     }
     
     @Override
@@ -74,8 +89,6 @@ public class OritechReiDisplay implements DisplayCategory<Display> {
     
     public void fillDisplay(FlowLayout root, OritechDisplay display, ReiUIAdapter<FlowLayout> adapter) {
         
-        var slots = screenProvider.getGuiSlots();
-        var slotOffsets = screenProvider.getSlots();
         var offsetX = 23;
         var offsetY = 17;
         
@@ -91,7 +104,6 @@ public class OritechReiDisplay implements DisplayCategory<Display> {
         }
         
         // arrow
-        var isGenerator = screenProvider instanceof UpgradableGeneratorBlockEntity;
         if (isGenerator) {
             root.child(adapter.wrap(Widgets.createBurningFire(new Point(0, 0))).positioning(Positioning.absolute(77 - offsetX, 42 - offsetY)));
         } else {

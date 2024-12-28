@@ -55,6 +55,10 @@ public class Geometry {
         return rotatePosition(BlockDirection.RIGHT.pos, facing);
     }
     
+    public static Vec3i getUp(Direction facing) {
+        return rotatePosition(new Vec3i(0, 1, 0), facing);
+    }
+    
     public static Vec3i getLeft(Direction facing) {
         return rotatePosition(BlockDirection.LEFT.pos, facing);
     }

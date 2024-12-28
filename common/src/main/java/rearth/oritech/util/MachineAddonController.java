@@ -166,6 +166,7 @@ public interface MachineAddonController {
         var efficiency = 1f;
         var energyAmount = 0L;
         var energyInsert = 0L;
+        var extraChambers = 0;
         
         for (var addon : addons) {
             var addonSettings = addon.addonBlock().getAddonSettings();
@@ -174,11 +175,12 @@ public interface MachineAddonController {
             
             energyAmount += addonSettings.addedCapacity();
             energyInsert += addonSettings.addedInsert();
+            extraChambers += addonSettings.chamberCount();
             
             getAdditionalStatFromAddon(addon);
         }
         
-        var baseData = new BaseAddonData(speed, efficiency, energyAmount, energyInsert);
+        var baseData = new BaseAddonData(speed, efficiency, energyAmount, energyInsert, extraChambers);
         setBaseAddonData(baseData);
     }
     
@@ -219,6 +221,7 @@ public interface MachineAddonController {
         nbt.putFloat("efficiency", data.efficiency);
         nbt.putLong("energyBonusCapacity", data.energyBonusCapacity);
         nbt.putLong("energyBonusTransfer", data.energyBonusTransfer);
+        nbt.putInt("extraChambers", data.extraChambers);
         
         var posList = new NbtList();
         for (var pos : getConnectedAddons()) {
@@ -232,7 +235,7 @@ public interface MachineAddonController {
     }
     
     default void loadAddonNbtData(NbtCompound nbt) {
-        var data = new BaseAddonData(nbt.getFloat("speed"), nbt.getFloat("efficiency"), nbt.getLong("energyBonusCapacity"), nbt.getLong("energyBonusTransfer"));
+        var data = new BaseAddonData(nbt.getFloat("speed"), nbt.getFloat("efficiency"), nbt.getLong("energyBonusCapacity"), nbt.getLong("energyBonusTransfer"), nbt.getInt("extraChambers"));
         setBaseAddonData(data);
         
         var posList = nbt.getList("connectedAddons", NbtElement.COMPOUND_TYPE);
@@ -250,7 +253,7 @@ public interface MachineAddonController {
     
     default AddonUiData getUiData() {
         var data = getBaseAddonData();
-        return new AddonUiData(getConnectedAddons(), getOpenSlots(), data.efficiency, data.speed, getMachinePos());
+        return new AddonUiData(getConnectedAddons(), getOpenSlots(), data.efficiency, data.speed, getMachinePos(), data.extraChambers);
     }
     
     private static Set<BlockPos> getNeighbors(BlockPos pos) {
@@ -267,14 +270,14 @@ public interface MachineAddonController {
     record AddonBlock(MachineAddonBlock addonBlock, BlockState state, BlockPos pos, AddonBlockEntity addonEntity) {
     }
     
-    record BaseAddonData(float speed, float efficiency, long energyBonusCapacity, long energyBonusTransfer) {
+    record BaseAddonData(float speed, float efficiency, long energyBonusCapacity, long energyBonusTransfer, int extraChambers) {
     }
     
     record AddonUiData(List<BlockPos> positions, List<BlockPos> openSlots, float efficiency, float speed,
-                       BlockPos ownPosition) {
+                       BlockPos ownPosition, int extraChambers) {
     }
     
-    BaseAddonData DEFAULT_ADDON_DATA = new BaseAddonData(1, 1, 0, 0);
+    BaseAddonData DEFAULT_ADDON_DATA = new BaseAddonData(1, 1, 0, 0, 0);
     
     Endec<AddonUiData> ADDON_UI_ENDEC = StructEndecBuilder.of(
       MinecraftEndecs.BLOCK_POS.listOf().fieldOf("addon_positions", AddonUiData::positions),
@@ -282,6 +285,7 @@ public interface MachineAddonController {
       Endec.FLOAT.fieldOf("efficiency", AddonUiData::efficiency),
       Endec.FLOAT.fieldOf("speed", AddonUiData::speed),
       MinecraftEndecs.BLOCK_POS.fieldOf("ownPosition", AddonUiData::ownPosition),
+      Endec.INT.fieldOf("extra_chambers", AddonUiData::extraChambers),
       AddonUiData::new
     );
 }

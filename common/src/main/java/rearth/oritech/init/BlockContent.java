@@ -167,8 +167,7 @@ public class BlockContent implements ArchitecturyBlockRegistryContainer {
     public static final Block ACCELERATOR_CONTROLLER = new AcceleratorControllerBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque());
     public static final Block ACCELERATOR_SENSOR = new AcceleratorSensorBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque());
     public static final Block BLACK_HOLE_BLOCK = new BlackHoleBlock(AbstractBlock.Settings.copy(Blocks.END_PORTAL).luminance(item -> 12).nonOpaque());
-    // TODO geo item
-    // @UseGeoBlockItem(scale = 0.7f)
+    
     public static final Block PARTICLE_COLLECTOR_BLOCK = new ParticleCollectorBlock(AbstractBlock.Settings.copy(Blocks.GLASS).nonOpaque());
     
     @UseGeoBlockItem(scale = 0.7f)
@@ -184,6 +183,7 @@ public class BlockContent implements ArchitecturyBlockRegistryContainer {
     public static final Block MACHINE_CORE_7 = new MachineCoreBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque(), 7);
     
     public static final Block MACHINE_SPEED_ADDON = new MachineAddonBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque(), AddonSettings.getDefaultSettings().withSpeedMultiplier(0.9f).withEfficiencyMultiplier(1.05f).withBoundingShape(MachineAddonBlock.MACHINE_SPEED_ADDON_SHAPE));
+    public static final Block MACHINE_PROCESSING_ADDON = new MachineAddonBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque(), AddonSettings.getDefaultSettings().withEfficiencyMultiplier(1.5f).withChambers(1).withBoundingShape(MachineAddonBlock.MACHINE_PROCESSING_ADDON_SHAPE));
     public static final Block MACHINE_FLUID_ADDON = new MachineAddonBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque(), AddonSettings.getDefaultSettings().withBoundingShape(MachineAddonBlock.MACHINE_FLUID_ADDON_SHAPE));
     public static final Block MACHINE_YIELD_ADDON = new MachineAddonBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque(), AddonSettings.getDefaultSettings().withBoundingShape(MachineAddonBlock.MACHINE_YIELD_ADDON_SHAPE));
     public static final Block CROP_FILTER_ADDON = new MachineAddonBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque(), AddonSettings.getDefaultSettings().withBoundingShape(MachineAddonBlock.CROP_FILTER_ADDON_SHAPE));
@@ -200,7 +200,7 @@ public class BlockContent implements ArchitecturyBlockRegistryContainer {
     
     //region reactor
     public static final Block REACTOR_CONTROLLER = new ReactorControllerBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).luminance(state -> 5));
-    public static final Block REACTOR_WALL = new ReactorWallBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
+    public static final Block REACTOR_WALL = new ReactorWallBlock(AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK).strength(10, 1800));
     public static final Block REACTOR_ROD = new ReactorRodBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque().luminance(state -> state.get(Properties.LIT) ? 15 : 3), 1, 1);
     public static final Block REACTOR_DOUBLE_ROD = new ReactorRodBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque().luminance(state -> state.get(Properties.LIT) ? 15 : 3), 2, 4);
     public static final Block REACTOR_QUAD_ROD = new ReactorRodBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque().luminance(state -> state.get(Properties.LIT) ? 15 : 3), 4, 12);
@@ -212,6 +212,10 @@ public class BlockContent implements ArchitecturyBlockRegistryContainer {
     public static final Block REACTOR_ABSORBER_PORT = new ReactorAbsorberPortBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
     public static final Block REACTOR_ENERGY_PORT = new ReactorEnergyPortBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
     public static final Block REACTOR_REDSTONE_PORT = new ReactorRedstonePortBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque());
+    
+    @NoAutoDrop
+    @ItemContent.ItemGroupTarget(ItemContent.Groups.decorative)
+    public static final Block URANIUM_CRYSTAL = new AmethystClusterBlock(7, 3, AbstractBlock.Settings.copy(Blocks.AMETHYST_CLUSTER).luminance(state -> 5));
     
     @NoBlockItem
     public static final Block REACTOR_EXPLOSION_SMALL = new NuclearExplosionBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), 9);
@@ -243,6 +247,9 @@ public class BlockContent implements ArchitecturyBlockRegistryContainer {
     @NoAutoDrop
     @ItemContent.ItemGroupTarget(ItemContent.Groups.decorative)
     public static final Block DEEPSLATE_PLATINUM_ORE = new Block(AbstractBlock.Settings.copy(Blocks.DEEPSLATE_DIAMOND_ORE));
+    @NoAutoDrop
+    @ItemContent.ItemGroupTarget(ItemContent.Groups.decorative)
+    public static final Block DEEPSLATE_URANIUM_ORE = new Block(AbstractBlock.Settings.copy(Blocks.DEEPSLATE_DIAMOND_ORE));
     //endregion
     
     //region resource nodes
@@ -276,6 +283,9 @@ public class BlockContent implements ArchitecturyBlockRegistryContainer {
     @NoAutoDrop
     @ItemContent.ItemGroupTarget(ItemContent.Groups.decorative)
     public static final Block RESOURCE_NODE_PLATINUM = new Block(AbstractBlock.Settings.copy(Blocks.BEDROCK));
+    @NoAutoDrop
+    @ItemContent.ItemGroupTarget(ItemContent.Groups.decorative)
+    public static final Block RESOURCE_NODE_URANIUM = new Block(AbstractBlock.Settings.copy(Blocks.BEDROCK));
     
     // region decorative
     @ItemContent.ItemGroupTarget(ItemContent.Groups.decorative)

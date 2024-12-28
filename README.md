@@ -143,3 +143,6 @@ In detail, these are the following items that are from the above-mentioned sourc
 * CrazyMiner34, for improvements to item rendering in 3rd person & the wrench texture
 * NovaKatt, for creating most of the metal / compacted block textures
 * Armen, for making the pipes configurable with the wrench and some more improvements
+
+## Sound Credits
+ * Nuke Sound: Atomic Explosion and Sub Rumble.wav by GowlerMusic -- https://freesound.org/s/265459/ -- License: Attribution 4.0

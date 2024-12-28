@@ -42,6 +42,7 @@ public class ReactorScreen extends BaseOwoHandledScreen<FlowLayout, ReactorScree
     private LabelComponent productionLabel;
     private LabelComponent hottestLabel;
     private LabelComponent sumHeatLabel;
+    private LabelComponent statusLabel;
     
     public ReactorScreen(ReactorScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -74,6 +75,7 @@ public class ReactorScreen extends BaseOwoHandledScreen<FlowLayout, ReactorScree
             addReactorComponentPreview(overlay);
             addReactorStats(overlay);
             addEnergyBar(overlay);
+            addReactorStatus(overlay);
         }
         
         addTitle(overlay);
@@ -92,6 +94,18 @@ public class ReactorScreen extends BaseOwoHandledScreen<FlowLayout, ReactorScree
         container.child(sumHeatLabel.margins(Insets.of(4)));
         
         overlay.child(container.margins(Insets.of(8)).surface(Surface.PANEL_INSET).positioning(Positioning.absolute(183, 16)));
+    }
+    
+    private void addReactorStatus(FlowLayout overlay) {
+        
+        var container = Containers.verticalFlow(Sizing.fixed(90), Sizing.content(1));
+        
+        statusLabel = Components.label(Text.translatable("Stable").formatted(Formatting.WHITE, Formatting.BOLD));
+        
+        container.child(statusLabel.horizontalTextAlignment(HorizontalAlignment.CENTER).horizontalSizing(Sizing.fill()).margins(Insets.of(4)));
+        
+        overlay.child(container.margins(Insets.of(4)).surface(Surface.PANEL_INSET).positioning(Positioning.absolute(187, 75)));
+        
     }
     
     private void addReactorComponentPreview(FlowLayout overlay) {
@@ -178,9 +192,11 @@ public class ReactorScreen extends BaseOwoHandledScreen<FlowLayout, ReactorScree
             overlay.state = res;
         }
         
+        var stackHeight = handler.reactorEntity.uiData.max().getY() - handler.reactorEntity.uiData.min().getY() - 1;
+        
         // gather stats
         var sumProducedEnergy = handler.reactorEntity.uiSyncData.componentHeats().stream()
-                                  .mapToInt(data -> data.receivedPulses() * ReactorControllerBlockEntity.RF_PER_PULSE).sum();
+                                  .mapToInt(data -> data.receivedPulses() * ReactorControllerBlockEntity.RF_PER_PULSE * stackHeight).sum();
         
         var sumProducedHeat = handler.reactorEntity.uiSyncData.componentHeats().stream()
                                 .filter(elem -> elem.receivedPulses() > 0)
@@ -193,6 +209,28 @@ public class ReactorScreen extends BaseOwoHandledScreen<FlowLayout, ReactorScree
         productionLabel.text(Text.translatable("text.oritech.reactor.rf_production", sumProducedEnergy));
         hottestLabel.text(Text.translatable("text.oritech.reactor.hottest_part", hottestComponent));
         sumHeatLabel.text(Text.translatable("text.oritech.reactor.heat_production", sumProducedHeat));
+        
+        // update status
+        var isActive = sumProducedEnergy + sumProducedHeat > 0;
+        var activeLabel = "idle";
+        var color = Formatting.WHITE;
+        
+        if (isActive) {
+            if (hottestComponent < 100) {
+                activeLabel = "stable";
+            } else if (hottestComponent < 1200) {
+                activeLabel = "heating_up";
+                color = Formatting.YELLOW;
+            } else if (hottestComponent < 1700) {
+                activeLabel = "unstable";
+                color = Formatting.RED;
+            } else {
+                activeLabel = "explosion_imminent";
+                color = Formatting.DARK_RED;
+            }
+        }
+        
+        statusLabel.text(Text.translatable("text.oritech.reactor." + activeLabel).formatted(Formatting.BOLD).formatted(color));
         
         updateEnergyBar();
         

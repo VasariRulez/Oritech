@@ -65,7 +65,15 @@ public abstract class FluidMultiblockGeneratorBlockEntity extends MultiblockGene
             processBuckets();
         }
         
+        resetEmptyFluidTank(inputTank);
+        
         super.tick(world, pos, state, blockEntity);
+    }
+    
+    public static void resetEmptyFluidTank(SingleVariantStorage<FluidVariant> tank) {
+        if (!tank.isResourceBlank() && tank.amount <= 0) {
+            tank.variant = FluidVariant.blank();
+        }
     }
     
     private void processBuckets() {

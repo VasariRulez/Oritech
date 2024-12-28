@@ -16,12 +16,15 @@ import rearth.oritech.init.world.features.oil.OilSpringFeature;
 import rearth.oritech.init.world.features.oil.OilSpringFeatureConfig;
 import rearth.oritech.init.world.features.resourcenode.ResourceNodeFeature;
 import rearth.oritech.init.world.features.resourcenode.ResourceNodeFeatureConfig;
+import rearth.oritech.init.world.features.uranium.UraniumPatchFeature;
+import rearth.oritech.init.world.features.uranium.UraniumPatchFeatureConfig;
 import rearth.oritech.util.ArchitecturyRegistryContainer;
 
 public class FeatureContent implements ArchitecturyRegistryContainer<Feature<?>> {
     
     public static final Feature<OilSpringFeatureConfig> OIL_SPRING = new OilSpringFeature(CodecUtils.toCodec(OilSpringFeatureConfig.OIL_FEATURE_ENDEC));
     public static final Feature<ResourceNodeFeatureConfig> RESOURCE_NODE = new ResourceNodeFeature(CodecUtils.toCodec(ResourceNodeFeatureConfig.NODE_FEATURE_ENDEC));
+    public static final Feature<UraniumPatchFeatureConfig> URANIUM_PATCH = new UraniumPatchFeature(CodecUtils.toCodec(UraniumPatchFeatureConfig.URANIUM_FEATURE_ENDEC));
     
     public static void initialize() {
         
@@ -56,6 +59,11 @@ public class FeatureContent implements ArchitecturyRegistryContainer<Feature<?>>
               BiomeSelectors.foundInOverworld(),
               GenerationStep.Feature.UNDERGROUND_ORES,
               RegistryKey.of(RegistryKeys.PLACED_FEATURE, Oritech.id("ore_nickel")));
+            
+            BiomeModifications.addFeature(
+              BiomeSelectors.foundInOverworld(),
+              GenerationStep.Feature.UNDERGROUND_ORES,
+              RegistryKey.of(RegistryKeys.PLACED_FEATURE, Oritech.id("uranium_patch")));
             
             BiomeModifications.addFeature(
               BiomeSelectors.foundInOverworld(),

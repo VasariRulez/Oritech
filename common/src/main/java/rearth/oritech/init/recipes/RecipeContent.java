@@ -19,4 +19,6 @@ public class RecipeContent implements ArchitecturyRecipeRegistryContainer {
     public static final OritechRecipeType DEEP_DRILL = new OritechRecipeType(Oritech.id("deep_drill"));
     public static final OritechRecipeType PARTICLE_COLLISION = new OritechRecipeType(Oritech.id("particle_collision"));
     public static final OritechRecipeType COOLER = new OritechRecipeType(Oritech.id("cooler"));
+    public static final OritechRecipeType REACTOR = new OritechRecipeType(Oritech.id("reactor"));
+    public static final OritechRecipeType LASER = new OritechRecipeType(Oritech.id("laser"));
 }

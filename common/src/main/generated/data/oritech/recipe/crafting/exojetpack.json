@@ -9,7 +9,7 @@
       "item": "oritech:exo_chestplate"
     },
     "f": {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     "s": {
       "item": "oritech:small_tank_block"

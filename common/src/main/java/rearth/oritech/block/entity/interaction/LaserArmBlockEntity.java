@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenHandler;
@@ -40,8 +41,8 @@ import org.jetbrains.annotations.Nullable;
 import rearth.oritech.Oritech;
 import rearth.oritech.block.base.entity.MachineBlockEntity;
 import rearth.oritech.block.behavior.LaserArmBlockBehavior;
-import rearth.oritech.block.blocks.processing.MachineCoreBlock;
 import rearth.oritech.block.blocks.interaction.LaserArmBlock;
+import rearth.oritech.block.blocks.processing.MachineCoreBlock;
 import rearth.oritech.block.entity.addons.RedstoneAddonBlockEntity;
 import rearth.oritech.block.entity.processing.MachineCoreEntity;
 import rearth.oritech.client.init.ModScreens;
@@ -49,12 +50,13 @@ import rearth.oritech.client.init.ParticleContent;
 import rearth.oritech.client.ui.UpgradableMachineScreenHandler;
 import rearth.oritech.init.BlockContent;
 import rearth.oritech.init.BlockEntitiesContent;
-import rearth.oritech.init.ItemContent;
 import rearth.oritech.init.TagContent;
+import rearth.oritech.init.recipes.OritechRecipe;
+import rearth.oritech.init.recipes.RecipeContent;
 import rearth.oritech.network.NetworkContent;
 import rearth.oritech.util.*;
-import rearth.oritech.util.energy.containers.DynamicEnergyStorage;
 import rearth.oritech.util.energy.EnergyApi;
+import rearth.oritech.util.energy.containers.DynamicEnergyStorage;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -216,10 +218,12 @@ public class LaserArmBlockEntity extends BlockEntity implements GeoBlockEntity, 
         } else {
             dropped = net.minecraft.block.Block.getDroppedStacks(targetBlockState, (ServerWorld) world, targetPos, targetEntity, getLaserPlayerEntity(), ItemStack.EMPTY);
         }
-
-        if (targetBlockState.getBlock().equals(Blocks.AMETHYST_CLUSTER)) {
+        
+        var blockRecipe = tryGetRecipeOfBlock(targetBlockState);
+        if (blockRecipe != null) {
+            var recipe = blockRecipe.value();
             var farmedCount = 1 + yieldAddons;
-            dropped = List.of(new ItemStack(ItemContent.FLUXITE, farmedCount));
+            dropped = List.of(new ItemStack(recipe.getResults().get(0).getItem(), farmedCount));
             ParticleContent.CHARGING.spawn(world, Vec3d.of(targetPos), 1);
         }
 
@@ -239,7 +243,14 @@ public class LaserArmBlockEntity extends BlockEntity implements GeoBlockEntity, 
 
         findNextBlockBreakTarget();
     }
-
+  
+    private RecipeEntry<OritechRecipe> tryGetRecipeOfBlock(BlockState destroyed) {
+        var inputItem = destroyed.getBlock().asItem();
+        var inputInv = new SimpleCraftingInventory(new ItemStack(inputItem));
+        var candidate = world.getRecipeManager().getFirstMatch(RecipeContent.LASER, inputInv, world);
+        return candidate.orElse(null);
+    }
+    
     public PlayerEntity getLaserPlayerEntity() {
         if (laserPlayerEntity == null) {
             laserPlayerEntity = new PlayerEntity(world, pos, 0, new GameProfile(UUID.randomUUID(), LASER_PLAYER_NAME)) {

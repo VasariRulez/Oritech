@@ -22,6 +22,10 @@ import rearth.oritech.init.BlockContent;
 import rearth.oritech.init.recipes.OritechRecipe;
 import rearth.oritech.init.recipes.OritechRecipeType;
 import rearth.oritech.init.recipes.RecipeContent;
+import rearth.oritech.util.InventorySlotAssignment;
+import rearth.oritech.util.ScreenProvider;
+
+import java.util.List;
 
 @JeiPlugin
 public class OritechJeiPlugin implements IModPlugin {
@@ -49,13 +53,22 @@ public class OritechJeiPlugin implements IModPlugin {
         registerOritechCategory(registration, RecipeContent.LAVA_GENERATOR, BlockContent.LAVA_GENERATOR_BLOCK, LavaGeneratorEntity.class);
         registerOritechCategory(registration, RecipeContent.STEAM_ENGINE, BlockContent.STEAM_ENGINE_BLOCK, SteamEngineEntity.class);
         
+        // reactor
+        registerCustom(registration, RecipeContent.REACTOR, BlockContent.REACTOR_CONTROLLER, true, List.of(new ScreenProvider.GuiSlot(0, 55, 35)), new InventorySlotAssignment(0, 1, 1, 0));
+        
         registration.addRecipeCategories(new OritechJeiParticleCollisionRecipe(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new OritechJeiLaserRecipe(registration.getJeiHelpers().getGuiHelper()));
         
     }
     
     private void registerOritechCategory(IRecipeCategoryRegistration registration, OritechRecipeType type, Block block, Class<? extends MachineBlockEntity> machineClass) {
         registration.addRecipeCategories(
           new OritechRecipeCategory(type, machineClass, block, registration.getJeiHelpers().getGuiHelper()));
+    }
+    
+    private void registerCustom(IRecipeCategoryRegistration registration, OritechRecipeType type, Block block, Boolean isGenerator, List<ScreenProvider.GuiSlot> slots, InventorySlotAssignment assignments) {
+        registration.addRecipeCategories(
+          new OritechRecipeCategory(type, block, registration.getJeiHelpers().getGuiHelper(), isGenerator, slots, assignments));
     }
     
     @Override
@@ -75,7 +88,10 @@ public class OritechJeiPlugin implements IModPlugin {
         registerRecipe(registration, RecipeContent.FUEL_GENERATOR);
         registerRecipe(registration, RecipeContent.LAVA_GENERATOR);
         registerRecipe(registration, RecipeContent.STEAM_ENGINE);
+        
         registerRecipe(registration, RecipeContent.PARTICLE_COLLISION);
+        registerRecipe(registration, RecipeContent.LASER);
+        registerRecipe(registration, RecipeContent.REACTOR);
         
     }
     
@@ -103,7 +119,10 @@ public class OritechJeiPlugin implements IModPlugin {
         registerCatalyst(registration, RecipeContent.FUEL_GENERATOR, BlockContent.FUEL_GENERATOR_BLOCK);
         registerCatalyst(registration, RecipeContent.LAVA_GENERATOR, BlockContent.LAVA_GENERATOR_BLOCK);
         registerCatalyst(registration, RecipeContent.STEAM_ENGINE, BlockContent.STEAM_ENGINE_BLOCK);
+        
         registerCatalyst(registration, RecipeContent.PARTICLE_COLLISION, BlockContent.ACCELERATOR_CONTROLLER);
+        registerCatalyst(registration, RecipeContent.LASER, BlockContent.LASER_ARM_BLOCK);
+        registerCatalyst(registration, RecipeContent.REACTOR, BlockContent.REACTOR_CONTROLLER);
     }
     
     private void registerCatalyst(IRecipeCatalystRegistration registration, OritechRecipeType type, Block block) {

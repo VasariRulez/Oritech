@@ -52,6 +52,7 @@ public class MachineAddonBlock extends WallMountedBlock implements BlockEntityPr
     // If any block does not have a boundingShape set, this will default to a full cube
     public static VoxelShape[][] MACHINE_ACCEPTOR_ADDON_SHAPE;
     public static VoxelShape[][] MACHINE_CAPACITOR_ADDON_SHAPE;
+    public static VoxelShape[][] MACHINE_PROCESSING_ADDON_SHAPE;
     public static VoxelShape[][] CROP_FILTER_ADDON_SHAPE;
     public static VoxelShape[][] MACHINE_EFFICIENCY_ADDON_SHAPE;
     public static VoxelShape[][] MACHINE_FLUID_ADDON_SHAPE;
@@ -246,6 +247,8 @@ public class MachineAddonBlock extends WallMountedBlock implements BlockEntityPr
                 tooltip.add(Text.translatable("tooltip.oritech.addon_hunter_desc").formatted(Formatting.GRAY));
             if (blockType == BlockContent.MACHINE_REDSTONE_ADDON)
                 tooltip.add(Text.translatable("tooltip.oritech.addon_redstone_desc").formatted(Formatting.GRAY));
+            if (blockType == BlockContent.MACHINE_PROCESSING_ADDON)
+                tooltip.add(Text.translatable("tooltip.oritech.processing_addon_desc").formatted(Formatting.GRAY));
             
             if (addonSettings.extender()) {
                 tooltip.add(Text.translatable("tooltip.oritech.addon_extender_desc").formatted(Formatting.GRAY));
@@ -260,6 +263,7 @@ public class MachineAddonBlock extends WallMountedBlock implements BlockEntityPr
     static {
         MACHINE_ACCEPTOR_ADDON_SHAPE = new VoxelShape[Direction.values().length][BlockFace.values().length];
         MACHINE_CAPACITOR_ADDON_SHAPE = new VoxelShape[Direction.values().length][BlockFace.values().length];
+        MACHINE_PROCESSING_ADDON_SHAPE = new VoxelShape[Direction.values().length][BlockFace.values().length];
         CROP_FILTER_ADDON_SHAPE = new VoxelShape[Direction.values().length][BlockFace.values().length];
         MACHINE_EFFICIENCY_ADDON_SHAPE = new VoxelShape[Direction.values().length][BlockFace.values().length];
         MACHINE_FLUID_ADDON_SHAPE = new VoxelShape[Direction.values().length][BlockFace.values().length];
@@ -312,6 +316,9 @@ public class MachineAddonBlock extends WallMountedBlock implements BlockEntityPr
                     Geometry.rotateVoxelShape(VoxelShapes.cuboid(0.25, 0.125, 0.1875, 0.75, 0.4375, 0.8125), facing, face),
                     Geometry.rotateVoxelShape(VoxelShapes.cuboid(0.75, 0.125, 0.125, 0.875, 0.5, 0.875), facing, face),
                     Geometry.rotateVoxelShape(VoxelShapes.cuboid(0.125, 0.125, 0.125, 0.25, 0.5, 0.875), facing, face));
+                MACHINE_PROCESSING_ADDON_SHAPE[facing.ordinal()][face.ordinal()] = VoxelShapes.union(
+                  Geometry.rotateVoxelShape(VoxelShapes.cuboid(0.0625, 0, 0.0625, 0.9375, 0.125, 0.9375), facing, face),
+                  Geometry.rotateVoxelShape(VoxelShapes.cuboid(0.125, 0.25, 0.25, 0.875, 0.75, 0.75), facing, face));
                 MACHINE_FLUID_ADDON_SHAPE[facing.ordinal()][face.ordinal()] = VoxelShapes.union(
                     Geometry.rotateVoxelShape(VoxelShapes.cuboid(0.125, 0, 0.125, 0.875, 0.125, 0.875), facing, face),
                     Geometry.rotateVoxelShape(VoxelShapes.cuboid(0.0625, 0.3125, 0.1875, 0.375, 0.625, 0.5625), facing, face),
@@ -390,43 +397,47 @@ public class MachineAddonBlock extends WallMountedBlock implements BlockEntityPr
     }
     
     // AddonSettings is an immutable configuration record for a machine addon, and should be constructed in BlockContent
-    public record AddonSettings(boolean extender, float speedMultiplier, float efficiencyMultiplier, long addedCapacity, long addedInsert, boolean acceptEnergy, boolean needsSupport, VoxelShape[][] boundingShape) {
+    public record AddonSettings(boolean extender, float speedMultiplier, float efficiencyMultiplier, long addedCapacity, long addedInsert, boolean acceptEnergy, boolean needsSupport, int chamberCount, VoxelShape[][] boundingShape) {
         public static AddonSettings getDefaultSettings() {
-            return new AddonSettings(false, 1.0f, 1.0f, 0, 0, false, true, null);
+            return new AddonSettings(false, 1.0f, 1.0f, 0, 0, false, true, 0, null);
         }
 
         // extender and needsSupport aren't strictly exclusive, but are unlikely to be used together
         public AddonSettings withExtender(boolean newExtender) {
-            return new AddonSettings(newExtender, speedMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, acceptEnergy, needsSupport, boundingShape);
+            return new AddonSettings(newExtender, speedMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, acceptEnergy, needsSupport, chamberCount, boundingShape);
         }
 
         public AddonSettings withSpeedMultiplier(float newMultiplier) {
-            return new AddonSettings(extender, newMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, acceptEnergy, needsSupport, boundingShape);
+            return new AddonSettings(extender, newMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, acceptEnergy, needsSupport, chamberCount, boundingShape);
         }
 
         public AddonSettings withEfficiencyMultiplier(float newMultiplier) {
-            return new AddonSettings(extender, speedMultiplier, newMultiplier, addedCapacity, addedInsert, acceptEnergy, needsSupport, boundingShape);
+            return new AddonSettings(extender, speedMultiplier, newMultiplier, addedCapacity, addedInsert, acceptEnergy, needsSupport, chamberCount, boundingShape);
         }
 
         public AddonSettings withAddedCapacity(long newCapacity) {
-            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, newCapacity, addedInsert, acceptEnergy, needsSupport, boundingShape);
+            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, newCapacity, addedInsert, acceptEnergy, needsSupport, chamberCount, boundingShape);
         }
 
         public AddonSettings withAddedInsert(long newInsert) {
-            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, addedCapacity, newInsert, acceptEnergy, needsSupport, boundingShape);
+            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, addedCapacity, newInsert, acceptEnergy, needsSupport, chamberCount, boundingShape);
         }
         
         public AddonSettings withAcceptEnergy(boolean newAccept) {
-            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, newAccept, needsSupport, boundingShape);
+            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, newAccept, needsSupport, chamberCount, boundingShape);
         }
 
         public AddonSettings withNeedsSupport(boolean newSupport) {
-            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, acceptEnergy, newSupport, boundingShape);
+            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, acceptEnergy, newSupport, chamberCount, boundingShape);
+        }
+
+        public AddonSettings withChambers(int chambers) {
+            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, acceptEnergy, needsSupport, chambers, boundingShape);
         }
 
         // boundingShape should only be set if needsSupport is also set
         public AddonSettings withBoundingShape(VoxelShape[][] newShape) {
-            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, acceptEnergy, needsSupport, newShape);
+            return new AddonSettings(extender, speedMultiplier, efficiencyMultiplier, addedCapacity, addedInsert, acceptEnergy, needsSupport, chamberCount, newShape);
         }
     }
 }

@@ -9,7 +9,7 @@
       "item": "oritech:biosteel_ingot"
     },
     "f": {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     "s": {
       "item": "oritech:magnetic_coil"

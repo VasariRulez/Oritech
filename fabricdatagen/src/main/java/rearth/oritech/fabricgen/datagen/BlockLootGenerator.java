@@ -42,6 +42,8 @@ public class BlockLootGenerator extends FabricBlockLootTableProvider {
         addOreDrop(BlockContent.DEEPSLATE_NICKEL_ORE, ItemContent.RAW_NICKEL);
         addOreDrop(BlockContent.DEEPSLATE_PLATINUM_ORE, ItemContent.RAW_PLATINUM);
         addOreDrop(BlockContent.ENDSTONE_PLATINUM_ORE, ItemContent.RAW_PLATINUM);
+        addOreDrop(BlockContent.DEEPSLATE_URANIUM_ORE, ItemContent.RAW_URANIUM);
+        addOreDrop(BlockContent.URANIUM_CRYSTAL, ItemContent.RAW_URANIUM);
         
         for (var block : BlockContent.autoRegisteredDrops) {
             addDrop(block);

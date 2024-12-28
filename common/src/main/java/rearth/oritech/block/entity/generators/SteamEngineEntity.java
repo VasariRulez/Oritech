@@ -109,7 +109,7 @@ public class SteamEngineEntity extends FluidMultiblockGeneratorBlockEntity {
         usedEnergyStorage.amount = (long) Math.min(usedEnergyStorage.amount + energyProduced, usedEnergyStorage.capacity);
         usedTankEntity.energyProducedTick += (int) energyProduced;
         
-        setBaseAddonData(new BaseAddonData(1 / (speed), 1 / energyEfficiency, 0, 0));
+        setBaseAddonData(new BaseAddonData(1 / (speed), 1 / energyEfficiency, 0, 0, 0));
         
         spawnParticles();
         lastWorkedAt = world.getTime();
@@ -288,7 +288,7 @@ public class SteamEngineEntity extends FluidMultiblockGeneratorBlockEntity {
         var worldPosF = (BlockPos) Geometry.offsetToWorldPosition(facing, posF, pos);
         
         res.add(new Pair<>(worldPosA, Geometry.fromVector(Geometry.getForward(facing))));
-        res.add(new Pair<>(worldPosB, Geometry.fromVector(Geometry.getLeft(facing))));  // todo check these directions
+        res.add(new Pair<>(worldPosB, Geometry.fromVector(Geometry.getLeft(facing))));
         res.add(new Pair<>(worldPosC, Geometry.fromVector(Geometry.getRight(facing))));
         res.add(new Pair<>(worldPosD, Geometry.fromVector(Geometry.getLeft(facing))));
         res.add(new Pair<>(worldPosE, Geometry.fromVector(Geometry.getRight(facing))));

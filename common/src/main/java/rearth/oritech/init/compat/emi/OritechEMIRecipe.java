@@ -15,14 +15,19 @@ import net.minecraft.util.math.BlockPos;
 import rearth.oritech.block.base.entity.MachineBlockEntity;
 import rearth.oritech.block.base.entity.UpgradableGeneratorBlockEntity;
 import rearth.oritech.init.recipes.OritechRecipe;
+import rearth.oritech.util.InventorySlotAssignment;
+import rearth.oritech.util.ScreenProvider;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import static rearth.oritech.client.ui.BasicMachineScreen.GUI_COMPONENTS;
 
 public class OritechEMIRecipe extends BasicEmiRecipe {
     
-    private final MachineBlockEntity screenProvider;
+    private final Boolean isGenerator;
+    private final List<ScreenProvider.GuiSlot> slots;
+    private final InventorySlotAssignment slotOffsets;
     private final OritechRecipe recipe;
     
     public OritechEMIRecipe(RecipeEntry<OritechRecipe> entry, EmiRecipeCategory category, Class<? extends MachineBlockEntity> screenProviderSource, BlockState machineState) {
@@ -41,7 +46,10 @@ public class OritechEMIRecipe extends BasicEmiRecipe {
             this.outputs.add(EmiStack.of(recipe.getFluidOutput().getFluid(), recipe.getFluidInput().getAmount() / fluidDivider));
         
         try {
-            this.screenProvider = screenProviderSource.getDeclaredConstructor(BlockPos.class, BlockState.class).newInstance(new BlockPos(0, 0, 0), machineState);
+            var screenProvider = screenProviderSource.getDeclaredConstructor(BlockPos.class, BlockState.class).newInstance(new BlockPos(0, 0, 0), machineState);
+            this.isGenerator = screenProvider instanceof UpgradableGeneratorBlockEntity;
+            this.slots = screenProvider.getGuiSlots();
+            this.slotOffsets = screenProvider.getSlots();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
@@ -49,16 +57,34 @@ public class OritechEMIRecipe extends BasicEmiRecipe {
         
     }
     
+    public OritechEMIRecipe(RecipeEntry<OritechRecipe> entry, EmiRecipeCategory category, Boolean isGenerator, List<ScreenProvider.GuiSlot> slots, InventorySlotAssignment slotOffsets) {
+        super(category, entry.id(), 150, 66);
+        
+        this.isGenerator = isGenerator;
+        this.slots = slots;
+        this.slotOffsets = slotOffsets;
+        
+        
+        var fluidDivider = Platform.isNeoForge() ? 81 : 1;  // no idea why this is needed
+        
+        recipe = entry.value();
+        recipe.getInputs().forEach(ingredient -> this.inputs.add(EmiIngredient.of(ingredient)));
+        recipe.getResults().forEach(stack -> this.outputs.add(EmiStack.of(stack)));
+        
+        if (recipe.getFluidInput() != null)
+            this.inputs.add(EmiStack.of(recipe.getFluidInput().getFluid(), recipe.getFluidInput().getAmount() / fluidDivider));
+        if (recipe.getFluidOutput() != null)
+            this.outputs.add(EmiStack.of(recipe.getFluidOutput().getFluid(), recipe.getFluidInput().getAmount() / fluidDivider));
+            
+    }
+    
     @Override
     public void addWidgets(WidgetHolder widgets) {
         
-        var slots = screenProvider.getGuiSlots();
-        var slotOffsets = screenProvider.getSlots();
         var offsetX = 23;
         var offsetY = 17;
         
         // central arrow/flame
-        var isGenerator = screenProvider instanceof UpgradableGeneratorBlockEntity;
         if (isGenerator) {
             widgets.addTexture(EmiTexture.FULL_FLAME, 76 - offsetX, 41 - offsetY);
         } else {

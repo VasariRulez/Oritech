@@ -9,7 +9,7 @@
       "tag": "c:ingots/steel"
     },
     "w": {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     }
   },
   "pattern": [

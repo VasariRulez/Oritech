@@ -7,6 +7,8 @@
     "oritech:electrum_dust",
     "oritech:adamant_dust",
     "oritech:energite_dust",
+    "oritech:uranium_dust",
+    "oritech:plutonium_dust",
     "oritech:steel_dust"
   ]
 }

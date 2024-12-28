@@ -6,7 +6,7 @@
       "item": "oritech:processing_unit"
     },
     "e": {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     },
     "m": {
       "tag": "c:ingots/electrum"

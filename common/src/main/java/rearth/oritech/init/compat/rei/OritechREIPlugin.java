@@ -15,19 +15,21 @@ import rearth.oritech.block.entity.generators.SteamEngineEntity;
 import rearth.oritech.block.entity.processing.*;
 import rearth.oritech.init.BlockContent;
 import rearth.oritech.init.compat.rei.Screens.OritechReiDisplay;
+import rearth.oritech.init.compat.rei.Screens.OritechReiLaserDisplay;
 import rearth.oritech.init.compat.rei.Screens.OritechReiParticleCollisionDisplay;
 import rearth.oritech.init.recipes.OritechRecipe;
 import rearth.oritech.init.recipes.OritechRecipeType;
 import rearth.oritech.init.recipes.RecipeContent;
+import rearth.oritech.util.InventorySlotAssignment;
+import rearth.oritech.util.ScreenProvider;
 
+import java.util.List;
 import java.util.function.BiFunction;
 
 public class OritechREIPlugin implements REIClientPlugin {
     
     @Override
     public void registerCategories(CategoryRegistry registry) {
-        
-        System.out.println("REI setup");
         
         // recipe types
         registerOritechCategory(registry, RecipeContent.PULVERIZER, BlockContent.PULVERIZER_BLOCK, (recipeType, icon) -> new OritechReiDisplay(recipeType, PulverizerBlockEntity.class, icon));
@@ -47,6 +49,8 @@ public class OritechREIPlugin implements REIClientPlugin {
         
         // other
         registerOritechCategory(registry, RecipeContent.PARTICLE_COLLISION, BlockContent.ACCELERATOR_CONTROLLER, OritechReiParticleCollisionDisplay::new);
+        registerOritechCategory(registry, RecipeContent.LASER, BlockContent.LASER_ARM_BLOCK, OritechReiLaserDisplay::new);
+        registerOritechCategory(registry, RecipeContent.REACTOR, BlockContent.REACTOR_CONTROLLER, (recipeType, icon) -> new OritechReiDisplay(recipeType, icon, false, List.of(new ScreenProvider.GuiSlot(0, 55, 35)), new InventorySlotAssignment(0, 1, 1, 0)));
         
         // workstations
         registerOriWorkstation(registry, RecipeContent.PULVERIZER, BlockContent.PULVERIZER_BLOCK);
@@ -61,6 +65,8 @@ public class OritechREIPlugin implements REIClientPlugin {
         registerOriWorkstation(registry, RecipeContent.LAVA_GENERATOR, BlockContent.LAVA_GENERATOR_BLOCK);
         registerOriWorkstation(registry, RecipeContent.FUEL_GENERATOR, BlockContent.FUEL_GENERATOR_BLOCK);
         registerOriWorkstation(registry, RecipeContent.PARTICLE_COLLISION, BlockContent.ACCELERATOR_CONTROLLER);
+        registerOriWorkstation(registry, RecipeContent.LASER, BlockContent.LASER_ARM_BLOCK);
+        registerOriWorkstation(registry, RecipeContent.REACTOR, BlockContent.REACTOR_CONTROLLER);
         
         registry.addWorkstations(CategoryIdentifier.of("minecraft", "plugins/smelting"), EntryStacks.of(BlockContent.POWERED_FURNACE_BLOCK));
     }
@@ -83,6 +89,8 @@ public class OritechREIPlugin implements REIClientPlugin {
         registerMachineRecipeType(registry, RecipeContent.STEAM_ENGINE);
         registerMachineRecipeType(registry, RecipeContent.FUEL_GENERATOR);
         registerMachineRecipeType(registry, RecipeContent.PARTICLE_COLLISION);
+        registerMachineRecipeType(registry, RecipeContent.LASER);
+        registerMachineRecipeType(registry, RecipeContent.REACTOR);
     }
     
     private void registerOritechCategory(CategoryRegistry registry, OritechRecipeType recipeType, ItemConvertible machineIcon, BiFunction<OritechRecipeType, ItemConvertible, ? extends DisplayCategory<Display>> screenType) {

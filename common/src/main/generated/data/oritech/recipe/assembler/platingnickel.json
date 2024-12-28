@@ -15,7 +15,7 @@
       "tag": "c:ingots/nickel"
     },
     {
-      "item": "oritech:plastic_sheet"
+      "tag": "c:plates/plastic"
     }
   ],
   "results": [
@@ -24,5 +24,5 @@
       "id": "oritech:nickel_plating_block"
     }
   ],
-  "time": 200
+  "time": 160
 }

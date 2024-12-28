@@ -6,11 +6,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import rearth.oritech.block.blocks.reactor.NuclearExplosionBlock;
 import rearth.oritech.init.BlockEntitiesContent;
+import rearth.oritech.init.SoundContent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,6 +46,7 @@ public class NuclearExplosionEntity extends BlockEntity implements BlockEntityTi
         if (startTime == -1) {
             startTime = world.getTime();
             explosionSphere(initialRadius + 7, 200, pos);
+            world.playSound(null, pos, SoundContent.NUKE_EXPLOSION, SoundCategory.BLOCKS, 30f, 1f);
         }
         
         var age = world.getTime() - startTime;
